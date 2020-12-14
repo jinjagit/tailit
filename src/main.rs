@@ -4,8 +4,15 @@ use std::time::Duration;
 use std::env;
 use std::fs::File;
 use linecount::count_lines;
+use clap::App;
 
 fn main() {
+    let matches = App::new("tailit")
+                          .version("0.1")
+                          .author("Simon Tharby <simontharby@gmail.com>")
+                          .about("A tail-log filter cl tool")
+                          .get_matches();
+
     let args: Vec<String> = env::args().collect();
     let path: &str = &args[1];
 
@@ -35,9 +42,9 @@ fn main() {
                     println!("Write complete");
 
                     let new_line_count: usize = lines(path);
-                    let n_newlines: usize = new_line_count - line_count;
+                    let n_new_lines: usize = new_line_count - line_count;
 
-                    println!("number of new lines: {}", n_newlines);
+                    println!("number of new lines: {}", n_new_lines);
 
                     line_count = new_line_count;
                 }
