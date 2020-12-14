@@ -1,20 +1,26 @@
+use clap::{crate_authors, App, Arg};
+use linecount::count_lines;
 use notify::{watcher, RecursiveMode, Watcher};
-use std::sync::mpsc::channel;
-use std::time::Duration;
 use std::env;
 use std::fs::File;
-use linecount::count_lines;
-use clap::App;
+use std::sync::mpsc::channel;
+use std::time::Duration;
 
 fn main() {
     let matches = App::new("tailit")
-                          .version("0.1")
-                          .author("Simon Tharby <simontharby@gmail.com>")
-                          .about("A tail-log filter cl tool")
-                          .get_matches();
+        .version("0.1")
+        .author(crate_authors!())
+        .about("A tail-log filter cl tool.")
+        .version_short("v")
+        .arg(
+            Arg::with_name("FILE_PATH")
+                .required(true)
+                .index(1)
+                .help("Path to the file to watch")
+        )
+        .get_matches();
 
-    let args: Vec<String> = env::args().collect();
-    let path: &str = &args[1];
+    let path = matches.value_of("FILE_PATH").unwrap();
 
     let mut line_count: usize = lines(path);
 
@@ -25,12 +31,7 @@ fn main() {
     let mut watcher = watcher(tx, Duration::from_secs(1)).unwrap();
 
     // Add a path to be watched.
-    watcher
-        .watch(
-            path,
-            RecursiveMode::Recursive,
-        )
-        .unwrap();
+    watcher.watch(path, RecursiveMode::Recursive).unwrap();
 
     loop {
         match rx.recv() {
