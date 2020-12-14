@@ -1,2 +1,2 @@
 # tailit
-WIP: tail-logger, written in Rust
+WIP: tail-log filter cl tool, written in Rust
