@@ -2,12 +2,12 @@ use clap::{crate_authors, App, Arg};
 use colored::*;
 use linecount::count_lines;
 use notify::{watcher, RecursiveMode, Watcher};
+use rev_lines::RevLines;
 use std::env;
 use std::fs::File;
+use std::io::BufReader;
 use std::sync::mpsc::channel;
 use std::time::Duration;
-use rev_lines::RevLines;
-use std::io::BufReader;
 
 fn main() {
     let (path_str, searches_str): (String, Vec<Vec<String>>) = clap_args();
@@ -74,7 +74,6 @@ fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
         let raw_line = &new_lines[n_new_lines - i - 1];
 
         for i in 0..searches.iter().count() {
-            
             for j in 1..searches[i].iter().count() {
                 let (phrase, color) = (searches[i][j], searches[i][0]);
 
@@ -112,6 +111,7 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
         .author(crate_authors!())
         .about("A tail-log filter cl tool with colored highlighting")
         .usage("tailit <FILE_PATH> [OPTIONS]")
+        .version_short("v")
         .arg(
             Arg::with_name("FILE_PATH")
                 .help("Sets the input file to use")
