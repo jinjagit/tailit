@@ -6,11 +6,22 @@ use std::env;
 use std::fs::File;
 use std::sync::mpsc::channel;
 use std::time::Duration;
+use rev_lines::RevLines;
+use std::io::BufReader;
 
 fn main() {
-    let (path, searches): &(String, Vec<Vec<String>>) = &clap_args();
+    let (path_str, searches_str): (String, Vec<Vec<String>>) = clap_args();
+    let path = &path_str;
 
-    println!("searches: {:?}", searches);
+    let mut searches: Vec<Vec<&str>> = vec![];
+
+    for i in 0..searches_str.iter().count() {
+        let temp_vec: Vec<&str> = searches_str[i].iter().map(|s| s as &str).collect();
+
+        searches.push(temp_vec)
+    }
+
+    //println!("searches: {:?}", searches);
 
     let mut line_count: usize = lines(path);
 
@@ -37,10 +48,51 @@ fn main() {
 
                     println!("number of new lines: {}", n_new_lines);
 
-                    line_count = new_line_count;
+                    if n_new_lines > 0 {
+                        run_search(path, n_new_lines, &searches);
+                        line_count = new_line_count;
+                    }
                 }
             }
             Err(e) => println!("watch error: {:?}", e),
+        }
+    }
+}
+
+fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
+    let newlines: Vec<String> = get_newlines(n_new_lines, filename);
+
+    print!(
+        "\n{}{}{}\n\n",
+        "---------------------------------- ".bright_blue(),
+        filename.bright_blue(),
+        " ----------------------------------".bright_blue()
+    );
+
+    // print lines from newline vec in reverse order == order in original file
+    for i in 0..n_new_lines {
+        let raw_line = &newlines[n_new_lines - i - 1];
+
+        for i in 0..searches.iter().count() {
+            
+            for j in 1..searches[i].iter().count() {
+                let (phrase, color) = (searches[i][j], searches[i][0]);
+
+                if raw_line.contains(&phrase) {
+                    let line = raw_line.replace(&phrase, &("*#~".to_owned() + &phrase + "*#~"));
+                    let split: Vec<&str> = line.split("*#~").collect();
+
+                    for p in split {
+                        if p == phrase {
+                            print_highlighted_phrase(&phrase, color);
+                        } else {
+                            print!("{}", p);
+                        }
+                    }
+
+                    print!("\n");
+                }
+            }
         }
     }
 }
@@ -85,7 +137,7 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
                 .help(&format!(
                     "{} {}",
                     "search term(s) to highlight in",
-                    "bright cyan text".bright_cyan().bold()
+                    "bright magenta text".bright_magenta().bold()
                 )),
         )
         .get_matches();
@@ -114,4 +166,36 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
     }
 
     return (path, searches);
+}
+
+// Return vec of newlines
+// TODO: Return some extra preceeding lines too, to enable printing of any preceeding lines
+// specified by user (since we count line numbers every second to detect changes, but process being
+// logged may last longer than the period considered; the last second or less - e.g server logs for
+// a page load)
+fn get_newlines(num_newlines: usize, filename: &str) -> Vec<String> {
+    let file = File::open(filename).unwrap();
+    let rev_lines = RevLines::new(BufReader::new(file)).unwrap();
+    let mut count: usize = 0;
+    let mut newlines: Vec<String> = vec![];
+
+    // add n last lines of file to newlines vec, starting from last line of file
+    for line in rev_lines {
+        newlines.push(line.clone());
+        count += 1;
+
+        if count == num_newlines {
+            break;
+        }
+    }
+
+    newlines
+}
+
+fn print_highlighted_phrase(phrase: &str, color: &str) {
+    match color {
+        "s1" => print!("{}", phrase.bright_blue().bold()),
+        "s2" => print!("{}", phrase.bright_magenta().bold()),
+        _ => print!("{}", phrase.normal()),
+    }
 }
