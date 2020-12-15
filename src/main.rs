@@ -60,7 +60,7 @@ fn main() {
 }
 
 fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
-    let newlines: Vec<String> = get_newlines(n_new_lines, filename);
+    let new_lines: Vec<String> = get_new_lines(n_new_lines, filename);
 
     print!(
         "\n{}{}{}\n\n",
@@ -69,9 +69,9 @@ fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
         " ----------------------------------".bright_blue()
     );
 
-    // print lines from newline vec in reverse order == order in original file
+    // Iterate over lines from new_lines vec in reverse order == order in original file.
     for i in 0..n_new_lines {
-        let raw_line = &newlines[n_new_lines - i - 1];
+        let raw_line = &new_lines[n_new_lines - i - 1];
 
         for i in 0..searches.iter().count() {
             
@@ -168,34 +168,30 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
     return (path, searches);
 }
 
-// Return vec of newlines
-// TODO: Return some extra preceeding lines too, to enable printing of any preceeding lines
-// specified by user (since we count line numbers every second to detect changes, but process being
-// logged may last longer than the period considered; the last second or less - e.g server logs for
-// a page load)
-fn get_newlines(num_newlines: usize, filename: &str) -> Vec<String> {
+// Return vec of new_lines.
+fn get_new_lines(num_new_lines: usize, filename: &str) -> Vec<String> {
     let file = File::open(filename).unwrap();
     let rev_lines = RevLines::new(BufReader::new(file)).unwrap();
     let mut count: usize = 0;
-    let mut newlines: Vec<String> = vec![];
+    let mut new_lines: Vec<String> = vec![];
 
-    // add n last lines of file to newlines vec, starting from last line of file
+    // Add n last lines of file to new_lines vec, starting from last line of file.
     for line in rev_lines {
-        newlines.push(line.clone());
+        new_lines.push(line.clone());
         count += 1;
 
-        if count == num_newlines {
+        if count == num_new_lines {
             break;
         }
     }
 
-    newlines
+    new_lines
 }
 
 fn print_highlighted_phrase(phrase: &str, color: &str) {
     match color {
         "s1" => print!("{}", phrase.bright_blue().bold()),
         "s2" => print!("{}", phrase.bright_magenta().bold()),
-        _ => print!("{}", phrase.normal()),
+        _ => print!("{}", phrase.normal().bold()),
     }
 }
