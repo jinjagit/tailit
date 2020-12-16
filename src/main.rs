@@ -13,6 +13,8 @@ fn main() {
     let (path_string, searches_strings): (String, Vec<Vec<String>>) = clap_args();
     let path = &path_string;
 
+    println!("searches: {:?}", searches_strings);
+
     // Convert Vec<Vec<String>> to Vec<Vec<&str>>.
     let mut searches: Vec<Vec<&str>> = vec![];
 
@@ -23,6 +25,8 @@ fn main() {
     }
 
     println!("{}{}", "Watching ", path.bright_blue());
+
+    //colors();
 
     let mut line_count: usize = count_num_lines(path);
 
@@ -143,7 +147,7 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
     let matches = App::new("tailit")
         .version("0.1")
         .author(crate_authors!())
-        .about("A tail-log filter cl tool with colored highlighting")
+        .about("A tail-log filter cl tool with colored highlighting.")
         .usage("tailit <FILE_PATH> [OPTIONS]")
         .version_short("v")
         .arg(
@@ -153,50 +157,308 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
                 .index(1),
         )
         .arg(
-            Arg::with_name("search_term_for_style_1")
-                .long("s1")
+            Arg::with_name("style_00")
+                .value_name("search_term")
+                .long("s0")
                 .multiple(true)
                 .takes_value(true)
+                .display_order(1)
                 .help(&format!(
                     "{} {}",
-                    "search term(s) to highlight in",
-                    "bright blue text".bright_blue().bold()
+                    "Search term(s) to highlight in",
+                    "default".normal().bold()
                 )),
         )
         .arg(
-            Arg::with_name("search_term_for_style_2")
+            Arg::with_name("style_01")
+                .value_name("search_term")
+                .long("s1")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(2)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "black".bright_black().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_02")
+                .value_name("search_term")
                 .long("s2")
                 .multiple(true)
                 .takes_value(true)
+                .display_order(3)
                 .help(&format!(
                     "{} {}",
-                    "search term(s) to highlight in",
-                    "bright magenta text".bright_magenta().bold()
+                    "Search term(s) to highlight in",
+                    "pink".truecolor(255, 173, 245).bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_03")
+                .value_name("search_term")
+                .long("s3")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(4)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "red".bright_red().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_04")
+                .value_name("search_term")
+                .long("s4")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(5)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "green".bright_green().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_05")
+                .value_name("search_term")
+                .long("s5")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(6)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "yellow".bright_yellow().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_06")
+                .value_name("search_term")
+                .long("s6")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(7)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "orange".truecolor(250, 172, 62).bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_07")
+                .value_name("search_term")
+                .long("s7")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(8)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "blue".bright_blue().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_08")
+                .value_name("search_term")
+                .long("s8")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(9)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "magenta".bright_magenta().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_09")
+                .value_name("search_term")
+                .long("s9")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(10)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "cyan".bright_cyan().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_10")
+                .value_name("search_term")
+                .long("s10")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(11)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight in",
+                    "white".bright_white().bold()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_11")
+                .value_name("search_term")
+                .long("s11")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(12)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "red".truecolor(0, 0, 0).bold().on_bright_red()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_12")
+                .value_name("search_term")
+                .long("s12")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(13)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "pink".truecolor(0, 0, 0).bold().on_truecolor(255, 173, 245)
+                )),
+        )
+        .arg(
+            Arg::with_name("style_13")
+                .value_name("search_term")
+                .long("s13")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(14)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "green".truecolor(0, 0, 0).bold().on_bright_green()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_14")
+                .value_name("search_term")
+                .long("s14")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(15)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "yellow".truecolor(0, 0, 0).bold().on_bright_yellow()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_15")
+                .value_name("search_term")
+                .long("s15")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(16)
+                .help(&format!(
+                    "{} {}\n",
+                    "Search term(s) to highlight on",
+                    "orange"
+                        .truecolor(0, 0, 0)
+                        .bold()
+                        .on_truecolor(250, 172, 62)
+                )),
+        )
+        .arg(
+            Arg::with_name("style_16")
+                .value_name("search_term")
+                .long("s16")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(17)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "blue".truecolor(0, 0, 0).bold().on_bright_blue()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_17")
+                .value_name("search_term")
+                .long("s17")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(18)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "magenta".truecolor(0, 0, 0).bold().on_bright_magenta()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_18")
+                .value_name("search_term")
+                .long("s18")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(19)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "cyan".truecolor(0, 0, 0).bold().on_bright_cyan()
+                )),
+        )
+        .arg(
+            Arg::with_name("style_19")
+                .value_name("search_term")
+                .long("s19")
+                .multiple(true)
+                .takes_value(true)
+                .display_order(20)
+                .help(&format!(
+                    "{} {}",
+                    "Search term(s) to highlight on",
+                    "white".truecolor(0, 0, 0).bold().on_bright_white()
                 )),
         )
         .group(
             ArgGroup::with_name("req_options")
-                .args(&["search_term_for_style_1", "search_term_for_style_2"])
+                .args(&[
+                    "style_00",
+                    "style_01",
+                    "style_02",
+                    "style_04",
+                    "style_05",
+                    "style_06",
+                    "style_07",
+                    "style_08",
+                    "style_09",
+                    "style_10",
+                    "style_11",
+                    "style_12",
+                    "style_13",
+                    "style_14",
+                    "style_15",
+                    "style_16",
+                    "style_17",
+                    "style_18",
+                    "style_19",
+                ])
+                .multiple(true)
                 .required(true),
         )
         .get_matches();
 
-    // All values converted to String type, to permit return of values without borrowing issues.
+    // All values converted to String type, to avoid borrowing issues when returning values.
     let path = String::from(matches.value_of("FILE_PATH").unwrap());
     let mut searches: Vec<Vec<String>> = vec![];
     let args = matches.args.clone();
 
-    // TODO: Catch case where no options specified & exit with message (? is there a clap method for this)
-    //    Maybe can specify must be at least one all possible options in clap config, or min. options count.
-    //    Note, clap already catches case of option(s) with no values provided.
-
     for arg in args {
         let (name, _) = arg;
 
-        if name != "FILE_PATH" {
+        if name != "FILE_PATH" && name != "req_options" {
             if let Some(opt_vals) = matches.values_of(name) {
                 let mut search_group_and_style: Vec<String> =
-                    vec![String::from("s") + &name.chars().last().unwrap().to_string()];
+                    vec![String::from(name)];
 
                 for val in opt_vals {
                     search_group_and_style.push(String::from(val));
@@ -216,3 +478,68 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
 
     return (path, searches);
 }
+
+// fn colors() {
+//     println!();
+
+//     println!("{}", "default text".normal().bold()); //  0
+//     println!("{}", "black text".bright_black().bold()); //  1
+//     println!("{}", "pink text".truecolor(255, 173, 245).bold()); //  2
+//     println!("{}", "red text".bright_red().bold()); //  3
+//     println!("{}", "green text".bright_green().bold()); //  4
+//     println!("{}", "yellow text".bright_yellow().bold()); //  5
+//     println!("{}", "orange text".truecolor(250, 172, 62).bold()); //  6
+//     println!("{}", "blue text".bright_blue().bold()); //  7
+//     println!("{}", "magenta text".bright_magenta().bold()); //  8
+//     println!("{}", "cyan text".bright_cyan().bold()); //  9
+//     println!("{}", "white text".bright_white().bold()); // 10
+
+//     println!(
+//         "{}",
+//         "black on red".truecolor(0, 0, 0).bold().on_bright_red()
+//     ); // 11
+//     println!(
+//         "{}",
+//         "black on pink"
+//             .truecolor(0, 0, 0)
+//             .bold()
+//             .on_truecolor(255, 173, 245)
+//     ); // 12
+//     println!(
+//         "{}",
+//         "black on green".truecolor(0, 0, 0).bold().on_bright_green()
+//     ); // 13
+//     println!(
+//         "{}",
+//         "black on yellow"
+//             .truecolor(0, 0, 0)
+//             .bold()
+//             .on_bright_yellow()
+//     ); // 14
+//     println!(
+//         "{}",
+//         "black on orange"
+//             .truecolor(0, 0, 0)
+//             .bold()
+//             .on_truecolor(250, 172, 62)
+//     ); // 15
+//     println!(
+//         "{}",
+//         "black on blue".truecolor(0, 0, 0).bold().on_bright_blue()
+//     ); // 16
+//     println!(
+//         "{}",
+//         "black on magenta"
+//             .truecolor(0, 0, 0)
+//             .bold()
+//             .on_bright_magenta()
+//     ); // 17
+//     println!(
+//         "{}",
+//         "black on cyan".truecolor(0, 0, 0).bold().on_bright_cyan()
+//     ); // 18
+//     println!(
+//         "{}",
+//         "black on white".truecolor(0, 0, 0).bold().on_bright_white()
+//     ); // 19
+// }
