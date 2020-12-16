@@ -183,7 +183,7 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
         .after_help(after_help)
         .arg(
             Arg::with_name("FILE_PATH")
-                .help("Sets the input file to use")
+                .help("Sets the file to watch for writes of new lines")
                 .required(true)
                 .index(1),
         )
