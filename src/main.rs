@@ -13,8 +13,6 @@ fn main() {
     let (path_string, searches_strings): (String, Vec<Vec<String>>) = clap_args();
     let path = &path_string;
 
-    println!("searches: {:?}", searches_strings);
-
     // Convert Vec<Vec<String>> to Vec<Vec<&str>>.
     let mut searches: Vec<Vec<&str>> = vec![];
 
@@ -26,10 +24,7 @@ fn main() {
 
     println!("{}{}", "Watching ", path.bright_blue());
 
-    //colors();
-
     let mut line_count: usize = count_num_lines(path);
-
     let (tx, rx) = channel();
 
     // Create a watcher object, delivering debounced events.
