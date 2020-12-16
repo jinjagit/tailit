@@ -173,25 +173,23 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
 
     let path = String::from(matches.value_of("FILE_PATH").unwrap());
     let mut searches: Vec<Vec<String>> = vec![];
+    let args = matches.args.clone();
 
-    if let Some(opt_vals) = matches.values_of("search_term_for_style_1") {
-        let mut s1: Vec<String> = vec![String::from("s1")];
+    for arg in args {
+        let (name, _) = arg;
 
-        for val in opt_vals {
-            s1.push(String::from(val));
+        if name != "FILE_PATH" {
+            if let Some(opt_vals) = matches.values_of(name) {
+                let mut style_code: Vec<String> =
+                    vec![String::from("s") + &name.chars().last().unwrap().to_string()];
+
+                for val in opt_vals {
+                    style_code.push(String::from(val));
+                }
+
+                searches.push(style_code);
+            }
         }
-
-        searches.push(s1);
-    }
-
-    if let Some(opt_vals) = matches.values_of("search_term_for_style_2") {
-        let mut s2: Vec<String> = vec![String::from("s2")];
-
-        for val in opt_vals {
-            s2.push(String::from(val));
-        }
-
-        searches.push(s2);
     }
 
     return (path, searches);
