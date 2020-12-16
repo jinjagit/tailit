@@ -179,7 +179,6 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
         .about("A tail-log filter cl tool with colored highlighting.")
         .usage("tailit <FILE_PATH> [OPTIONS]")
         .version_short("v")
-//        .after_help("NOTES:\n\nAt least one styling option and at least one related search term must be specified:\n\n    Valid:   $ tailit example.log --s5 findme\n    Invalid: $ tailit example.log\n    Invalid: $ tailit example.log --s5\n\nMore than one styling option, with at least one related term for each, can be specified:\n\n    Valid: $ tailit example.log --s5 findme1 --s2 findme2 findme3 --s17 findme4\n\nThe same styling option can be used multiple times:\n\n    Valid: $ tailit example.log --s5 findme1 --s5 findme2 --s9 findme3 --s5 findme4 findme5\n")
         .after_help(after_help)
         .arg(
             Arg::with_name("FILE_PATH")
