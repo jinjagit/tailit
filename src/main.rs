@@ -10,13 +10,14 @@ use std::sync::mpsc::channel;
 use std::time::Duration;
 
 fn main() {
-    let (path_str, searches_str): (String, Vec<Vec<String>>) = clap_args();
-    let path = &path_str;
+    let (path_string, searches_strings): (String, Vec<Vec<String>>) = clap_args();
+    let path = &path_string;
 
+    // Convert Vec<Vec<String>> to Vec<Vec<&str>>.
     let mut searches: Vec<Vec<&str>> = vec![];
 
-    for i in 0..searches_str.iter().count() {
-        let temp_vec: Vec<&str> = searches_str[i].iter().map(|s| s as &str).collect();
+    for i in 0..searches_strings.iter().count() {
+        let temp_vec: Vec<&str> = searches_strings[i].iter().map(|s| s as &str).collect();
 
         searches.push(temp_vec)
     }
@@ -100,6 +101,34 @@ fn lines(filename: &str) -> usize {
     count_lines(File::open(filename).unwrap()).unwrap()
 }
 
+// Return vec of new_lines.
+fn get_new_lines(num_new_lines: usize, filename: &str) -> Vec<String> {
+    let file = File::open(filename).unwrap();
+    let rev_lines = RevLines::new(BufReader::new(file)).unwrap();
+    let mut count: usize = 0;
+    let mut new_lines: Vec<String> = vec![];
+
+    // Add n last lines of file to new_lines vec, starting from last line of file.
+    for line in rev_lines {
+        new_lines.push(line.clone());
+        count += 1;
+
+        if count == num_new_lines {
+            break;
+        }
+    }
+
+    new_lines
+}
+
+fn print_highlighted_phrase(phrase: &str, color: &str) {
+    match color {
+        "s1" => print!("{}", phrase.bright_blue().bold()),
+        "s2" => print!("{}", phrase.bright_magenta().bold()),
+        _ => print!("{}", phrase.normal().bold()),
+    }
+}
+
 // Define and set command-line arguments, flags and options, using the 'clap' crate.
 //
 // Although this config could be moved to a .yml file, this would prevent the custom text coloring
@@ -166,32 +195,4 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
     }
 
     return (path, searches);
-}
-
-// Return vec of new_lines.
-fn get_new_lines(num_new_lines: usize, filename: &str) -> Vec<String> {
-    let file = File::open(filename).unwrap();
-    let rev_lines = RevLines::new(BufReader::new(file)).unwrap();
-    let mut count: usize = 0;
-    let mut new_lines: Vec<String> = vec![];
-
-    // Add n last lines of file to new_lines vec, starting from last line of file.
-    for line in rev_lines {
-        new_lines.push(line.clone());
-        count += 1;
-
-        if count == num_new_lines {
-            break;
-        }
-    }
-
-    new_lines
-}
-
-fn print_highlighted_phrase(phrase: &str, color: &str) {
-    match color {
-        "s1" => print!("{}", phrase.bright_blue().bold()),
-        "s2" => print!("{}", phrase.bright_magenta().bold()),
-        _ => print!("{}", phrase.normal().bold()),
-    }
 }
