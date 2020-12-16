@@ -1,4 +1,4 @@
-use clap::{crate_authors, App, Arg};
+use clap::{crate_authors, App, Arg, ArgGroup};
 use colored::*;
 use linecount::count_lines;
 use notify::{watcher, RecursiveMode, Watcher};
@@ -174,8 +174,14 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
                     "bright magenta text".bright_magenta().bold()
                 )),
         )
+        .group(
+            ArgGroup::with_name("req_options")
+                .args(&["search_term_for_style_1", "search_term_for_style_2"])
+                .required(true),
+        )
         .get_matches();
 
+    // All values converted to String type, to permit return of values without borrowing issues.
     let path = String::from(matches.value_of("FILE_PATH").unwrap());
     let mut searches: Vec<Vec<String>> = vec![];
     let args = matches.args.clone();
