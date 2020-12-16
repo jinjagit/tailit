@@ -22,6 +22,8 @@ fn main() {
         searches.push(temp_vec)
     }
 
+    println!("{}{}", "Watching ", path.bright_blue());
+
     //println!("searches: {:?}", searches);
 
     let mut line_count: usize = lines(path);
@@ -40,19 +42,19 @@ fn main() {
             Ok(event) => {
                 let e_str: String = format!("{:?}", event);
                 if e_str.contains("NoticeWrite") {
-                    println!("Writing...");
+                    println!("Write access detected.");
                 } else if e_str.contains("Write") {
-                    println!("Write complete");
-
                     let new_line_count: usize = lines(path);
                     let n_new_lines: usize = new_line_count - line_count;
 
-                    println!("number of new lines: {}", n_new_lines);
+                    println!("{}{}{}", "Write complete: ", &n_new_lines.to_string().bright_blue(), " new lines written.");
 
                     if n_new_lines > 0 {
                         run_search(path, n_new_lines, &searches);
                         line_count = new_line_count;
                     }
+
+                    println!("\n{}{}", "Watching ", path.bright_blue());
                 }
             }
             Err(e) => println!("watch error: {:?}", e),
