@@ -12,6 +12,13 @@ Assuming you have [Rust](https://www.rust-lang.org/tools/install) installed...
 7. Change to a directory with a logfile you wish to monitor for changes.  
 8. Run tailit with some suitable search terms for your case. E.g. `$ tailit example_file.log --s3 search_term1 --s7 search_term2`  
 
+Example of tailing a Rails `development.log` file, with
+```
+$ tailit development.log --s6 Rendered --s4 Started Completed --s12 Parameters
+```
+![example](img/tailit.png)
+
+
 Output of `$ tailit -h`  
   
 ![help](img/help_text.png)
