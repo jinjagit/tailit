@@ -24,9 +24,7 @@ fn main() {
 
     println!("{}{}", "Watching ", path.bright_blue());
 
-    //println!("searches: {:?}", searches);
-
-    let mut line_count: usize = lines(path);
+    let mut line_count: usize = count_num_lines(path);
 
     let (tx, rx) = channel();
 
@@ -44,10 +42,15 @@ fn main() {
                 if e_str.contains("NoticeWrite") {
                     println!("Write access detected.");
                 } else if e_str.contains("Write") {
-                    let new_line_count: usize = lines(path);
+                    let new_line_count: usize = count_num_lines(path);
                     let n_new_lines: usize = new_line_count - line_count;
 
-                    println!("{}{}{}", "Write complete: ", &n_new_lines.to_string().bright_blue(), " new lines written.");
+                    println!(
+                        "{}{}{}",
+                        "Write complete: ",
+                        &n_new_lines.to_string().bright_blue(),
+                        " new lines written."
+                    );
 
                     if n_new_lines > 0 {
                         run_search(path, n_new_lines, &searches);
@@ -78,7 +81,7 @@ fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
 
         for i in 0..searches.iter().count() {
             for j in 1..searches[i].iter().count() {
-                let (phrase, color) = (searches[i][j], searches[i][0]);
+                let (phrase, style_code) = (searches[i][j], searches[i][0]);
 
                 if raw_line.contains(&phrase) {
                     let line = raw_line.replace(&phrase, &("*#~".to_owned() + &phrase + "*#~"));
@@ -86,7 +89,7 @@ fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
 
                     for p in split {
                         if p == phrase {
-                            print_highlighted_phrase(&phrase, color);
+                            print_highlighted_phrase(&phrase, style_code);
                         } else {
                             print!("{}", p);
                         }
@@ -99,7 +102,7 @@ fn run_search(filename: &str, n_new_lines: usize, searches: &Vec<Vec<&str>>) {
     }
 }
 
-fn lines(filename: &str) -> usize {
+fn count_num_lines(filename: &str) -> usize {
     count_lines(File::open(filename).unwrap()).unwrap()
 }
 
@@ -123,8 +126,8 @@ fn get_new_lines(num_new_lines: usize, filename: &str) -> Vec<String> {
     new_lines
 }
 
-fn print_highlighted_phrase(phrase: &str, color: &str) {
-    match color {
+fn print_highlighted_phrase(phrase: &str, style_code: &str) {
+    match style_code {
         "s1" => print!("{}", phrase.bright_blue().bold()),
         "s2" => print!("{}", phrase.bright_magenta().bold()),
         _ => print!("{}", phrase.normal().bold()),
@@ -177,22 +180,33 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
     let mut searches: Vec<Vec<String>> = vec![];
     let args = matches.args.clone();
 
+    // TODO: Catch case where no options specified & exit with message (? is there a clap method for this)
+    //    Maybe can specify must be at least one all possible options in clap config, or min. options count.
+    //    Note, clap already catches case of option(s) with no values provided.
+
     for arg in args {
         let (name, _) = arg;
 
         if name != "FILE_PATH" {
             if let Some(opt_vals) = matches.values_of(name) {
-                let mut style_code: Vec<String> =
+                let mut search_group_and_style: Vec<String> =
                     vec![String::from("s") + &name.chars().last().unwrap().to_string()];
 
                 for val in opt_vals {
-                    style_code.push(String::from(val));
+                    search_group_and_style.push(String::from(val));
                 }
 
-                searches.push(style_code);
+                searches.push(search_group_and_style);
             }
         }
     }
+
+    // searches: Vec<Vec<String>>
+    // vec of vecs of: each option (style_code) used and associated values (search_terms)
+    //
+    // Example:
+    // $ tailit example.log --s4 Started Completed --s7 Rendered
+    // => [["s4", "Started", "Completed"], ["s7", "Rendered"]]
 
     return (path, searches);
 }
