@@ -132,8 +132,32 @@ fn get_new_lines(num_new_lines: usize, filename: &str) -> Vec<String> {
 
 fn print_highlighted_phrase(phrase: &str, style_code: &str) {
     match style_code {
-        "s1" => print!("{}", phrase.bright_blue().bold()),
-        "s2" => print!("{}", phrase.bright_magenta().bold()),
+        "style_00" => print!("{}", phrase.normal().bold()),
+        "style_01" => print!("{}", phrase.bright_black().bold()),
+        "style_02" => print!("{}", phrase.truecolor(255, 173, 245).bold()), // pink
+        "style_03" => print!("{}", phrase.bright_red().bold()),
+        "style_04" => print!("{}", phrase.bright_green().bold()),
+        "style_05" => print!("{}", phrase.bright_yellow().bold()),
+        "style_06" => print!("{}", phrase.truecolor(250, 172, 62).bold()), // orange
+        "style_07" => print!("{}", phrase.bright_blue().bold()),
+        "style_08" => print!("{}", phrase.bright_magenta().bold()),
+        "style_09" => print!("{}", phrase.bright_cyan().bold().bold()),
+        "style_10" => print!("{}", phrase.bright_white().bold()),
+        "style_11" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_red()),
+        "style_12" => print!(
+            "{}",
+            phrase.truecolor(0, 0, 0).bold().on_truecolor(255, 173, 245)
+        ), // on_pink
+        "style_13" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_green()),
+        "style_14" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_yellow()),
+        "style_15" => print!(
+            "{}",
+            phrase.truecolor(0, 0, 0).bold().on_truecolor(250, 172, 62)
+        ), // on_orange
+        "style_16" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_blue()),
+        "style_17" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_magenta()),
+        "style_18" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_cyan()),
+        "style_19" => print!("{}", phrase.truecolor(0, 0, 0).bold().on_bright_white()),
         _ => print!("{}", phrase.normal().bold()),
     }
 }
@@ -422,25 +446,10 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
         .group(
             ArgGroup::with_name("req_options")
                 .args(&[
-                    "style_00",
-                    "style_01",
-                    "style_02",
-                    "style_04",
-                    "style_05",
-                    "style_06",
-                    "style_07",
-                    "style_08",
-                    "style_09",
-                    "style_10",
-                    "style_11",
-                    "style_12",
-                    "style_13",
-                    "style_14",
-                    "style_15",
-                    "style_16",
-                    "style_17",
-                    "style_18",
-                    "style_19",
+                    "style_00", "style_01", "style_02", "style_03", "style_04", "style_05",
+                    "style_06", "style_07", "style_08", "style_09", "style_10", "style_11",
+                    "style_12", "style_13", "style_14", "style_15", "style_16", "style_17",
+                    "style_18", "style_19",
                 ])
                 .multiple(true)
                 .required(true),
@@ -457,8 +466,7 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
 
         if name != "FILE_PATH" && name != "req_options" {
             if let Some(opt_vals) = matches.values_of(name) {
-                let mut search_group_and_style: Vec<String> =
-                    vec![String::from(name)];
+                let mut search_group_and_style: Vec<String> = vec![String::from(name)];
 
                 for val in opt_vals {
                     search_group_and_style.push(String::from(val));
@@ -478,68 +486,3 @@ fn clap_args() -> (String, Vec<Vec<String>>) {
 
     return (path, searches);
 }
-
-// fn colors() {
-//     println!();
-
-//     println!("{}", "default text".normal().bold()); //  0
-//     println!("{}", "black text".bright_black().bold()); //  1
-//     println!("{}", "pink text".truecolor(255, 173, 245).bold()); //  2
-//     println!("{}", "red text".bright_red().bold()); //  3
-//     println!("{}", "green text".bright_green().bold()); //  4
-//     println!("{}", "yellow text".bright_yellow().bold()); //  5
-//     println!("{}", "orange text".truecolor(250, 172, 62).bold()); //  6
-//     println!("{}", "blue text".bright_blue().bold()); //  7
-//     println!("{}", "magenta text".bright_magenta().bold()); //  8
-//     println!("{}", "cyan text".bright_cyan().bold()); //  9
-//     println!("{}", "white text".bright_white().bold()); // 10
-
-//     println!(
-//         "{}",
-//         "black on red".truecolor(0, 0, 0).bold().on_bright_red()
-//     ); // 11
-//     println!(
-//         "{}",
-//         "black on pink"
-//             .truecolor(0, 0, 0)
-//             .bold()
-//             .on_truecolor(255, 173, 245)
-//     ); // 12
-//     println!(
-//         "{}",
-//         "black on green".truecolor(0, 0, 0).bold().on_bright_green()
-//     ); // 13
-//     println!(
-//         "{}",
-//         "black on yellow"
-//             .truecolor(0, 0, 0)
-//             .bold()
-//             .on_bright_yellow()
-//     ); // 14
-//     println!(
-//         "{}",
-//         "black on orange"
-//             .truecolor(0, 0, 0)
-//             .bold()
-//             .on_truecolor(250, 172, 62)
-//     ); // 15
-//     println!(
-//         "{}",
-//         "black on blue".truecolor(0, 0, 0).bold().on_bright_blue()
-//     ); // 16
-//     println!(
-//         "{}",
-//         "black on magenta"
-//             .truecolor(0, 0, 0)
-//             .bold()
-//             .on_bright_magenta()
-//     ); // 17
-//     println!(
-//         "{}",
-//         "black on cyan".truecolor(0, 0, 0).bold().on_bright_cyan()
-//     ); // 18
-//     println!(
-//         "{}",
-//         "black on white".truecolor(0, 0, 0).bold().on_bright_white()
-//     ); // 19
-// }
