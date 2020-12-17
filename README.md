@@ -8,7 +8,7 @@ Assuming you have [Rust](https://www.rust-lang.org/tools/install) installed...
 3. Create a release build: `$ cargo build --release`  
 4. Change to release directory: `$ cd target/release`  
 5. Copy the executable to somewhere on your path. For me, this was: `$ sudo cp tailit /bin/tailit`  
-6. Ensure you have permissions to execute the file, etc. E.g. `$ chmod 755 tailit`  
+6. Ensure you have permissions to execute the file, etc. E.g. `$ sudo chmod 755 tailit`  
 7. Change to a directory with a logfile you wish to monitor for changes.  
 8. Run tailit with some suitable search terms for your case. E.g. `$ tailit example_file.log --s3 search_term1 --s7 search_term2`  
 
