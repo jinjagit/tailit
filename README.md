@@ -14,7 +14,7 @@ Assuming you have [Rust](https://www.rust-lang.org/tools/install) installed...
 
 Example of tailing a Rails `development.log` file, with
 ```
-$ tailit development.log --s6 Rendered --s4 Started Completed --s12 Parameters
+$ tailit development.log --s6 Rendered --s2 Started Completed --s12 Parameters --s11 ::text
 ```
 ![example](img/tailit.png)
 
