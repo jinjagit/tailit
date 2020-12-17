@@ -1,5 +1,5 @@
 # tailit
-WIP: tail-log filter cl tool, written in Rust.
+WIP: Tail-log filter CL tool, written in Rust.
 
 ## Get started:
 Assuming you have [Rust](https://www.rust-lang.org/tools/install) installed...  
