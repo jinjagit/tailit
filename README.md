@@ -28,5 +28,3 @@ Output of `$ tailit -h`
   * Search terms are seperated by spaces in the command arguments, therefore searching for a phrase that contains spaces will not highlight matches of the whole term.
   * Different search terms that are found on the same line of a log file will result in the same line being printed more than once, each output highlighting the occurences of one of the search terms in the line.
   * Cannot, yet, specify return of n preceding &/or following lines.
-
-### Random change to test git config.
